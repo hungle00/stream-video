@@ -2,10 +2,63 @@
 <html>
 <head>
 	<title>Video stream sample</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
 </head>
 <body>
-	<video id="videoPlayer" controls muted="muted" autoplay>
-		<source src="http://localhost:3000/video" type="video/mp4">
-	</video>
+	<div class="container">
+		<header>
+			<h1 style="text-align: center">Watch video and comment</h1>
+		</header>
+		<br />
+		<div class="row">
+
+			<div class="col">
+				<video id="videoPlayer" controls muted="muted" autoplay  width="90%">
+					<source src="http://localhost:5000/video" type="video/mp4">
+				</video>
+			</div>
+	
+			<div class="col">
+				<div class="card">
+					<div class="card-body">
+						<h2 class="card-title">Say something about video</h5>
+						<div class="chat">
+							<ul id="chat-messages"></ul>
+						</div>
+						<form class="form-inline">
+							<div class="form-group mb-2">
+								<input class="input" type="text" id="name" placeholder="Bob Dylan" />
+							</div>
+							<div class="form-group mx-sm-3 mb-2">
+								<input class="input" type="text" id="message" placeholder="Say something" />
+							</div>
+							<button type="submit" class="btn btn-primary mb-2" value="Post">Confirm identity</button>
+						</form>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<script>
+			const socket = io();
+			$('form').submit(function() {
+				const name = $('#name').val();
+				const message = $('#message').val();
+		
+				socket.emit('chatter', `${name} : ${message}`);
+				$('#message').val('');
+				return false; 
+			});
+		
+			socket.on('chatter', function(message) {
+				$('#chat-messages').append($('<li>').text(message));
+			});
+		</script>
 </body>
 </html>

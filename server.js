@@ -3,6 +3,13 @@ const fs = require('fs');
 const path = require('path');
 const app = express();
 
+const port = 5000;
+const server = app.listen(port, () => {
+  	console.log(`App running on port ${port}`)
+})
+
+const io = require('socket.io').listen(server);
+
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/', (req, res) => {
@@ -41,6 +48,10 @@ app.get('/video', (req, res) => {
 	}
 });
 
-app.listen(3000, () => {
-	console.log('Hello World');
+io.on('connection', (socket) => {
+	console.log('hello socket')
+	socket.on('chatter', (message) => {
+	  console.log('chatter : ', message)
+	  io.emit('chatter', message)
+	})
 })

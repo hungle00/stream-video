@@ -1,0 +1,11 @@
+body {
+	font-family: Avenir, Helvetica, Arial, sans-serif;
+}
+
+form {
+	margin-top: 0.75rem;
+}
+
+#chat-messages li {
+	padding: 0.75rem;
+}
